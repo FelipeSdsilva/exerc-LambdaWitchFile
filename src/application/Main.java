@@ -36,16 +36,17 @@ public class Main {
             }
 
 
-            sum = products.stream().mapToDouble(value -> value.getPrice()).sum();
+            sum = products.stream().map(value -> value.getPrice()).reduce(0.0, (x, y) -> x + y);
 
             double avg = sum / products.size();
 
-            products.forEach(System.out::println);
+            List<String> names = products.stream().filter(product -> product.getPrice() < avg)
+                    .map(product -> product.getName())
+                    .sorted((o1, o2) -> -o1.toUpperCase().compareTo(o2.toUpperCase())).toList();
 
             System.out.println("Average price products: " + String.format("%.2f", avg));
 
-            System.out.println(products.stream().filter(product -> product.getPrice() < avg)
-                    .sorted((o1, o2) -> -o1.getName().toUpperCase().compareTo(o2.getName().toUpperCase())).toList());
+            names.forEach(System.out::println);
 
         } catch (IOException e) {
 
